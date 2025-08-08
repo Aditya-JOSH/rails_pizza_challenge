@@ -1,0 +1,58 @@
+<div class="container">
+  <h1 class="mb-4 fs-3">Orders</h1>
+  <hr>
+  
+  <% if @orders.empty? %>
+    <div class="alert alert-info small">
+      No open orders available.
+    </div>
+  <% end %>
+
+  <div class="d-flex justify-content-center mb-3">
+    <%= paginate @orders %>
+  </div>
+  
+  <% @orders.each do |order| %>
+    <div class="row mb-4 small">
+      <div class="col-md-6">
+        <p><strong>ID:</strong> <%= order.uuid %></p>
+        <p><strong>Created:</strong> <%= order.created_at.strftime("%d/%m/%Y %H:%M") %></p>
+        <p><strong>Promotion Codes:</strong> <%= order.promotion_codes.pluck(:code).join(", ") %></p>
+        <p><strong>Discount Code:</strong> <%= order.discount_code&.code %></p>
+        <p><strong>Total Price:</strong> €<%= sprintf('%.2f', order.total) %></p>
+        <p>
+          <%= button_to 'Complete', order_path(order.uuid), { method: :patch, class: 'btn btn-outline-secondary btn-sm' } %>
+        </p>
+      </div>
+      
+      <div class="col-md-6">
+        <p><strong>Items</strong></p>
+        <ul>
+          <% order.order_items.each do |order_item| %>
+            <li class="mb-2">
+              <strong><%= order_item.quantity %>x <%= order_item.pizza.name %></strong> (<%= order_item.size %>)
+                <% added = order_item.item_ingredients.select(&:added) %>
+                <% if added.any? %>
+                  <div class="ms-3">
+                    <small>Add: <%= added.map { |ii| ii.ingredient.name }.join(", ") %></small>
+                  </div>
+                <% end %>
+                  
+                <% removed = order_item.item_ingredients.reject(&:added) %>
+                <% if removed.any? %>
+                  <div class="ms-3">
+                    <small>Remove: <%= removed.map { |ii| ii.ingredient.name }.join(", ") %></small>
+                  </div>
+                <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <hr>
+  <% end %>
+
+  <div class="d-flex justify-content-center mb-3">
+    <%= paginate @orders %>
+  </div>
+</div>
