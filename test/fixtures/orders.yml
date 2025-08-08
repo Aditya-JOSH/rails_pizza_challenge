@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uuid: MyString
+  state: MyString
+  total: 1.5
+  deleted_at: 2025-08-08 00:29:11
+
+two:
+  uuid: MyString
+  state: MyString
+  total: 1.5
+  deleted_at: 2025-08-08 00:29:11
